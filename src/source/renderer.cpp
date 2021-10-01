@@ -872,37 +872,7 @@ void renderer_draw_render_target() {
 	// SDL_RenderCopy(renderer.renderer, renderer.renderTarget, NULL, NULL);
 }
 
-void renderer_draw_render_target_camera() {
-	camera_update();
-
-	SDL_Rect destination_rect;
-	auto x_pos = (window_w / 2) - (int)(gw * step_scale / 2) + camera.offset_x;
-	auto y_pos = (window_h / 2) - (int)(gh * step_scale / 2) + camera.offset_y;
-	destination_rect.x = (int)x_pos;
- 	destination_rect.y = (int)y_pos;
-  	destination_rect.w = gw * step_scale;
-  	destination_rect.h = gh * step_scale;
-
-	SDL_SetRenderTarget(renderer.renderer, NULL);
-	SDL_RenderCopy(renderer.renderer, renderer.renderTarget, NULL, &destination_rect);
-}
-
-static void framelog_render() {
-	if(!FrameLog::is_enabled()) {
-		return;
-	}
-	const auto &messages = FrameLog::get_messages();
-	const Point &p = FrameLog::get_position();
-	int y = p.y;
-    for(const auto &m : messages) {
-        draw_text_str(p.x, y, Colors::white, m);
-        y += 15;
-    }
-}
-
 void renderer_flip() {
-	framelog_render();
-    //GPU_Flip(renderer.screen);
 	SDL_RenderPresent(renderer.renderer);
 }
 
@@ -912,81 +882,4 @@ void renderer_destroy() {
 	TTF_Quit();
 	SDL_DestroyRenderer(renderer.renderer);
 	SDL_DestroyWindow(renderer.sdl_window);
-}
-
-const Camera &get_camera() {
-	return camera;
-}
-
-void camera_follow(Vector2 position) {
-	camera.follow_x = position.x - (static_cast<int>(gw) / 2);
-	camera.follow_y = position.y - (static_cast<int>(gh) / 2);
-}
-
-void camera_lookat(Vector2 position) {
-	camera.x = (float)(position.x - (gw / 2));
-	camera.y = (float)(position.y - (gh / 2));
-	camera.follow_x = camera.x;
-	camera.follow_y = camera.y;
-}
-
-void camera_shake(float t) {
-	camera.trauma += t;
-	camera.trauma = Math::clamp_f(camera.trauma, 0.0f, 1.0f);
-	camera.shake_duration = 0.7f;
-}
-
-void camera_displace(Vector2 displacement) {
-	camera.x += displacement.x;
-	camera.y += displacement.y;
-}
-
-void camera_reset_clamp_area() {
-	camera.x_min = -900000.0f;
-    camera.x_max = 900000.0f;
-    camera.y_min = -900000.0f;
-    camera.y_max = 900000.0f;
-}
-
-void camera_set_clamp_area(float x_min, float x_max, float y_min, float y_max) {
-	camera.x_min = x_min;
-	camera.x_max = x_max;
-	camera.y_min = y_min;
-	camera.y_max = y_max;
-}
-
-static const float traumaDropOff = 0.8f; // trauma reduction per 60 frames
-static const float maxAngle = 5; // degrees // maxAngle might be something like 5 or 10 degrees
-static const float maxOffsetX = 10; // pixels
-static const float maxOffsetY = 10; // pixels
-
-void camera_update() {
-	float interpolation = camera.speed * Time::delta_time;
-	camera.x = Math::lerp(camera.x, camera.follow_x, interpolation);
-	camera.y = Math::lerp(camera.y, camera.follow_y, interpolation);
-	
-	camera.x = Math::clamp_f(camera.x, camera.x_min, camera.x_max);
-    camera.y = Math::clamp_f(camera.y, camera.y_min, camera.y_max);
-
-	if(camera.shake_duration <= 0.0f) {
-		camera.trauma = 0.0f;
-		camera.shake_duration = 0.0f;
-		camera.offset_x = camera.offset_y = 0;
-		return;
-	}
-	
-	// float shake = camera.trauma * camera.trauma; // trauma^2 (or trauma^3)
-	// we use simple trauma becuase its so small otherwise
-	float shake = camera.trauma; // trauma^2 (or trauma^3)
-
-	float x_r = (float)(RNG::next_i(1) == 0 ? -1.0f : 1.0f);
-	float y_r = (float)(RNG::next_i(1) == 0 ? -1.0f : 1.0f);
-	
-	float offsetX = shake * maxOffsetX * x_r;
-	float offsetY = shake * maxOffsetY * y_r;
-
-	camera.offset_x = offsetX;
-	camera.offset_y = offsetY;
-
-	camera.shake_duration -= Time::delta_time;
 }

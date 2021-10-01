@@ -173,15 +173,4 @@ void renderer_draw_render_target_camera();
 void renderer_flip();
 void renderer_destroy();
 
-const Camera &get_camera();
-void camera_follow(Vector2 position);
-void camera_lookat(Vector2 position);
-void camera_displace(Vector2 displacement);
-/*! Trauma should be between 0 and 1. */
-void camera_shake(float t);
-void camera_update();
-void camera_set_clamp_area(float x_min, float x_max, float y_min, float y_max);
-void camera_reset_clamp_area();
-
-
 #endif
