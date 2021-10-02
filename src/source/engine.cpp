@@ -9,34 +9,6 @@ namespace Engine {
 		Input::init();
 	}
 
-	static bool logging_enabled = true;
-	void toggle_logging() {
-		logging_enabled = !logging_enabled;
-	}
-	
-	void logn(const char* fmt, ...) {
-		if(!logging_enabled) {
-			return;
-		}
-		
-		va_list args;
-		va_start(args, fmt);
-		printf("\n");
-		vprintf(fmt, args);
-		va_end(args);
-	}
-
-	void log(const char* fmt, ...) {
-		if(!logging_enabled) {
-			return;
-		}
-
-		va_list args;
-		va_start(args, fmt);
-		vprintf(fmt, args);
-		va_end(args);
-	}
-	
     static std::string base_data_folder = "";
 	void set_base_data_folder(const std::string &name) {
 		base_data_folder = name + "/";
@@ -72,7 +44,6 @@ namespace Input {
 	int mousex = 0;
 	int mousey = 0;
 	bool mouse_left_down = false;
-    SDL_GameController *controller;
     const Uint8* current_keyboard_state;
 
     std::unordered_set<int> keysDown;
@@ -80,13 +51,6 @@ namespace Input {
 	std::unordered_set<int> keysUpNow;
 
     void init() {
-        controller = NULL;
-        for (int i = 0; i < SDL_NumJoysticks(); ++i) {
-            if (SDL_IsGameController(i)) {
-                controller = SDL_GameControllerOpen(i);
-                if (controller) break;
-            }
-        }
     }
  
     void update_states() {
