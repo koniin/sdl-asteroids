@@ -62,37 +62,6 @@ namespace Engine {
 	}
 }
 
-Vector2 Point::to_vector2() const {
-	return Vector2((float)x, (float)y);
-}
-
-const Vector2 Vector2::Zero = Vector2(0, 0);
-const Vector2 Vector2::One = Vector2(1, 1);
-
-Point Vector2::to_point() const {
-	return Point((int)x, (int)y);
-}
-
-Vector2 Vector2::normal() const {
-	float mag = Math::magnitude(*this);
-	if(mag == 0.0f) {
-		mag = 1.0f;
-	}
-	return (1.f / mag) * *this;
-}
-
-float Vector2::length() const {
-	return Math::sqrt_f(length2());
-}
-
-float Vector2::length2() const {
-	return x*x + y*y;
-}
-
-float Vector2::dot(const Vector2 &v) const {
-	return Math::dot_product(v, *this);
-}
-
 namespace Time {
 	float delta_time = 0.0f;
 	float delta_time_fixed = 0.0f;
