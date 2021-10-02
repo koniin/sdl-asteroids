@@ -307,15 +307,15 @@ void renderer_draw_render_target() {
 	SDL_SetRenderTarget(renderer.renderer, NULL);
 	
 	// USE TO CREATE BLACK BARS (That can be filled with other things if we want)
-	SDL_Rect destination_rect;
-	destination_rect.x = (window_w / 2) - (gw * step_scale / 2);
- 	destination_rect.y = (window_h / 2) - (gh * step_scale / 2);
-  	destination_rect.w = gw * step_scale;
-  	destination_rect.h = gh * step_scale;
-	SDL_RenderCopy(renderer.renderer, renderer.renderTarget, NULL, &destination_rect);
+	// SDL_Rect destination_rect;
+	// destination_rect.x = (window_w / 2) - (gw * step_scale / 2);
+ 	// destination_rect.y = (window_h / 2) - (gh * step_scale / 2);
+  	// destination_rect.w = gw * step_scale;
+  	// destination_rect.h = gh * step_scale;
+	// SDL_RenderCopy(renderer.renderer, renderer.renderTarget, NULL, &destination_rect);
 	
 	// USE TO STRETCH TO FILL SCREEN
-	// SDL_RenderCopy(renderer.renderer, renderer.renderTarget, NULL, NULL);
+	SDL_RenderCopy(renderer.renderer, renderer.renderTarget, NULL, NULL);
 }
 
 void renderer_flip() {

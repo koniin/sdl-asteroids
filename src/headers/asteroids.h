@@ -98,11 +98,11 @@ struct Asteroid {
 
 	float radius() {
 		if(size == 1)
-			return 8.0f;
+			return 32.0f;
 		else if(size == 2) 
-			return 6.0f;
+			return 16.0f;
 		else 
-			return 2.0f;
+			return 8.0f;
 	}
 };
 
@@ -540,6 +540,8 @@ void asteroids_update() {
 
 void asteroids_render() {
 	renderer_clear();
+
+	draw_g_rectangle_filled_RGBA(0, 0, gw, gh, 34, 1, 46, 255);
 
 	if(game_state.inactive) {
 		int seconds = (int)game_state.inactive_timer;
