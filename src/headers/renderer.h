@@ -125,44 +125,16 @@ void window_set_scale(unsigned s);
 void window_toggle_fullscreen(bool useDesktopResolution);
 void set_default_font(Font *font);
 
-void draw_sprite(const Sprite *sprite, int x, int y);
-void draw_sprite_centered(const Sprite *sprite, int x, int y);
-void draw_sprite_region(const Sprite *sprite, const SDL_Rect *src_rect, int x, int y);
-void draw_sprite_region_centered(const Sprite *sprite, const SDL_Rect *src_rect, int x, int y);
-void draw_sprite_region_centered_rotated(const Sprite *sprite, const SDL_Rect *src_rect, int x, int y, float angle);
-void draw_sprite_region_centered_ex(const Sprite *sprite, const SDL_Rect *src_rect, int x, int y, int w, int h, float angle);
-void draw_spritesheet_name(const SpriteSheet &s, const std::string &sprite, const int &x, const int &y);
-void draw_spritesheet_name_centered(const SpriteSheet &s, const std::string &sprite, const int &x, const int &y);
-void draw_spritesheet_name_centered_rotated(const SpriteSheet &s, const std::string &sprite, const int &x, const int &y, const float &angle);
-void draw_spritesheet_name_centered_ex(const SpriteSheet &s, const std::string &sprite, const int &x, const int &y, const int &w, const int &h, const float &angle);
-void draw_text(int x, int y, const SDL_Color &color, const char *text);
-void draw_text_str(int x, int y, const SDL_Color &color, const std::string text);
-void draw_text_font(Font *font, int x, int y, const SDL_Color &color, const char *text);
-void draw_text_centered(int x, int y, const SDL_Color &color, const char *text);
-void draw_text_centered_str(int x, int y, const SDL_Color &color, std::string text);
-void draw_text_right_str(int x, int y, const SDL_Color &color, std::string text);
-void draw_text_font_centered(Font *font, int x, int y, const SDL_Color &color, const char *text);
-void draw_text_font_right_aligned(Font *font, int x, int y, const SDL_Color &color, const char *text);
 
-void draw_g_pixel(int x, int y);
-void draw_g_pixel_color(int x, int y, const SDL_Color &color);
-void draw_g_pixel_RGBA(int x, int y, uint8_t r, uint8_t g, uint8_t b, uint8_t a);
-void draw_g_line(int x1, int y1, int x2, int y2);
-void draw_g_line_RGBA(int x1, int y1, int x2, int y2, uint8_t r, uint8_t g, uint8_t b, uint8_t a);
-void draw_g_horizontal_line(int x1, int x2, int y);
-void draw_g_horizontal_line_color(int x1, int x2, int y, SDL_Color &color);
-void draw_g_horizontal_line_RGBA(int x1, int x2, int y, uint8_t r, uint8_t g, uint8_t b, uint8_t a);
-void draw_g_vertical_line_color(int x, int y1, int y2, SDL_Color &color);
-void draw_g_vertical_line_RGBA(int x, int y1, int y2, uint8_t r, uint8_t g, uint8_t b, uint8_t a);
-void draw_g_circle_color(int x, int y, int rad, SDL_Color &color);
-void draw_g_circle_RGBA(int x, int y, int rad, uint8_t r, uint8_t g, uint8_t b, uint8_t a);
-void draw_g_circle_filled_color(int x, int y, int rad, SDL_Color &color);
-void draw_g_circle_filled_RGBA(int x, int y, int rad, uint8_t r, uint8_t g, uint8_t b, uint8_t a);
-void draw_g_ellipseRGBA(int x, int y, int rx, int ry, uint8_t r, uint8_t g, uint8_t b, uint8_t a);
-void draw_g_rectangle(int x, int y, int w, int h, const SDL_Color &color);
 void draw_g_rectangle_RGBA(int x, int y, int w, int h, uint8_t r, uint8_t g, uint8_t b, uint8_t a);
-void draw_g_rectangle_filled(int x, int y, int w, int h, const SDL_Color &color);
 void draw_g_rectangle_filled_RGBA(int x, int y, int w, int h, uint8_t r, uint8_t g, uint8_t b, uint8_t a);
+
+void draw_text_font_centered(Font *font, int x, int y, const SDL_Color &color, std::string text);
+void draw_text_centered(int x, int y, const SDL_Color &color, std::string text);
+void draw_text(int x, int y, const SDL_Color &color, const std::string text);
+
+void draw_spritesheet_name_centered_rotated(const SpriteSheet &s, const std::string &sprite, const int &x, const int &y, const float &angle);
+// // --------
 
 int renderer_init(const char *title, unsigned vw, unsigned vh, unsigned scale);
 void renderer_clear();

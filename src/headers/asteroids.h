@@ -544,7 +544,7 @@ void asteroids_render() {
 			std::string("Resetting in: " + std::to_string(seconds) + " seconds..").c_str());
 	} else {
 	    std::string level_string = "Level: " + std::to_string(game_state.level);
-	    draw_text_centered_str(gw / 2, gh - 10, game_state.text_color, level_string);
+	    draw_text_centered(gw / 2, gh - 10, game_state.text_color, level_string);
     }
 
 	for(unsigned i = 0; i < asteroid_n; ++i) {
@@ -594,8 +594,8 @@ void asteroids_render() {
 		
 		std::string playerInfo = "Player " + std::to_string(player.faction + 1) + 
 			" | Lives: " + std::to_string(player.health) + " | Score: ";
-		draw_text_str(gw / 2 - 80, 10 + 10 * i, game_state.text_color, playerInfo);
-		draw_text_str(gw / 2 + 60, 10 + 10 * i, game_state.text_color, std::to_string(player.score));
+		draw_text(gw / 2 - 80, 10 + 10 * i, game_state.text_color, playerInfo);
+		draw_text(gw / 2 + 60, 10 + 10 * i, game_state.text_color, std::to_string(player.score));
 	}
 
 	renderer_draw_render_target();
