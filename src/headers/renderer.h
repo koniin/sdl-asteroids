@@ -75,10 +75,7 @@ struct Font {
 
 namespace Resources {
     Sprite *sprite_load(const std::string &name, const std::string &filename);
-    Sprite *sprite_load_white(const std::string &name, const std::string &filename);
     Sprite *sprite_get(const std::string &name);
-    SDL_Rect &sprite_get_from_sheet(const size_t &sprite_sheet_index, const std::string &name);
-    void sprite_remove(const std::string &name);
 
     Font *font_load(const std::string name, const std::string filename, int pointSize);
     Font *font_get(const std::string &name);
@@ -95,12 +92,6 @@ namespace Resources {
     void font_set_style(const std::string &name, FontStyle style);
     // Outlines must be set before drawing text with that font to cache correctly
     void font_set_outline(const std::string &name, int outline);
-
-    void sprite_sheet_load(const std::string &name, const std::string &file);
-    void sprite_sheet_copy_as_white(const std::string &name, const std::string &copy_from);
-    size_t sprite_sheet_index(const std::string &name);
-    const SpriteSheet &sprite_sheet_get(const std::string &name);
-    std::vector<SpriteSheet> &get_sprite_sheets();
 
     void cleanup();
 }
@@ -133,7 +124,8 @@ void draw_text_font_centered(Font *font, int x, int y, const SDL_Color &color, s
 void draw_text_centered(int x, int y, const SDL_Color &color, std::string text);
 void draw_text(int x, int y, const SDL_Color &color, const std::string text);
 
-void draw_spritesheet_name_centered_rotated(const SpriteSheet &s, const std::string &sprite, const int &x, const int &y, const float &angle);
+void draw_sprite_centered_rotated(const Sprite *sprite, const int &x, const int &y, const float &angle);
+
 // // --------
 
 int renderer_init(const char *title, unsigned vw, unsigned vh, unsigned scale);

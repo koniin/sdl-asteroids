@@ -498,12 +498,16 @@ void game_state_inactivate() {
 	game_state.inactive_timer = game_state.pause_time;
 }
 
+
 void asteroids_load() {
     Engine::set_base_data_folder("data");
 	Font *font = Resources::font_load("normal", "pixeltype.ttf", 15);
 	set_default_font(font);
 	Resources::font_load("gameover", "pixeltype.ttf", 85);
-	Resources::sprite_sheet_load("shooter", "shooter.data");
+
+	Resources::sprite_load("ship", "ship.png");
+	
+	// Resources::sprite_sheet_load("shooter", "shooter.data");
 
 	game_state_reset();
 }
@@ -578,7 +582,7 @@ void asteroids_render() {
 	for(unsigned i = 0; i < ship_n; ++i) {
 		Ship &player = ships[i];
 
-		draw_spritesheet_name_centered_rotated(Resources::sprite_sheet_get("shooter"), "player", (int)player.position.x, (int)player.position.y, player.angle + 90);
+		draw_sprite_centered_rotated(Resources::sprite_get("ship"), (int)player.position.x, (int)player.position.y, player.angle + 90);
 		
 		if(player.shield.is_active()) {
 			int shieldSize = 20;

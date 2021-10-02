@@ -40,72 +40,6 @@ namespace Resources {
 		} 
 		return newTexture; 
 	}
-	
-    static SDL_Texture* load_streaming_texture(const std::string &path, int &w, int &h) {
-		//The final texture 
-		SDL_Texture* newTexture = NULL; 
-		//Load image at specified path 
-		SDL_Surface* loadedSurface = IMG_Load( path.c_str() ); 
-		if( loadedSurface == NULL ) { 
-			printf( "Unable to load image %s! SDL_image Error: %s\n", path.c_str(), IMG_GetError() ); 
-		} else { 
-			SDL_Surface *formattedSurface = SDL_ConvertSurfaceFormat(loadedSurface, SDL_PIXELFORMAT_ARGB8888, 0);
-            newTexture = SDL_CreateTexture( renderer.renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, formattedSurface->w, formattedSurface->h );
-			SDL_SetTextureBlendMode(newTexture, SDL_BLENDMODE_BLEND);
-			if( newTexture == NULL ) { 
-				printf( "Unable to create texture from %s! SDL Error: %s\n", path.c_str(), SDL_GetError() ); 
-			} 
-			w = formattedSurface->w; 
-            h = formattedSurface->h;
-			
-            //Lock texture for manipulation 
-            void* pixels; 
-            int pitch; 
-            SDL_LockTexture( newTexture, NULL, &pixels, &pitch ); 
-            //Copy loaded/formatted surface pixels 
-            memcpy( pixels, formattedSurface->pixels, formattedSurface->pitch * formattedSurface->h ); 
-
-            //Unlock texture to update 
-            SDL_UnlockTexture( newTexture ); 
-            pixels = NULL; 
-
-			//Get rid of old loaded surface 
-			SDL_FreeSurface( loadedSurface ); 
-            SDL_FreeSurface( formattedSurface );
-		}
-
-        return newTexture;
-	}
-
-    void transform_non_transparent_to_white(SDL_Texture* texture, int height) {
-        void* texture_pixels; 
-        int pitch; 
-        SDL_LockTexture( texture, NULL, &texture_pixels, &pitch );
-		
-        //Uint32 format = SDL_GetWindowPixelFormat( renderer.sdl_window ); 
-        SDL_PixelFormat* mappingFormat = SDL_AllocFormat( SDL_PIXELFORMAT_ARGB8888 ); 
-
-        //Get pixel data 
-        Uint32* pixels = (Uint32*)texture_pixels; 
-        int pixelCount = ( pitch / 4 ) * height;
-
-        //Map colors 
-        Uint32 transparent = SDL_MapRGBA( mappingFormat, 0x0, 0x0, 0x0, 0x0 ); 
-        Uint32 white = SDL_MapRGBA( mappingFormat, 0xFF, 0xFF, 0xFF, 0xFF ); 
-		
-        // Change transparent pixels to white
-        for( int i = 0; i < pixelCount; ++i ) { 
-            if(pixels[i] != transparent) {
-                pixels[i] = white;
-			} 
-        } 
-
-        //Unlock texture 
-        SDL_UnlockTexture( texture ); 
-
-        pixels = NULL; 
-        pitch = 0;
-    }
 
     Sprite *sprite_load(const std::string &name, const std::string &filename) {
 		std::string path = Engine::get_base_data_folder() + filename;
@@ -114,93 +48,11 @@ namespace Resources {
 		sprites[name] = s;
 		return s;
 	}
-
-	Sprite *sprite_load_white(const std::string &name, const std::string &filename) {
-		std::string path = Engine::get_base_data_folder() + filename;
-		Sprite *s = new Sprite;
-    	s->image = load_streaming_texture(path, s->w, s->h);
-		transform_non_transparent_to_white(s->image, s->h);
-		sprites[name] = s;
-		return s;
-	}
-
+	
     Sprite *sprite_get(const std::string &name) {
 		return sprites.at(name);
 	}
-
-	SDL_Rect &sprite_get_from_sheet(const size_t &sprite_sheet_index, const std::string &name) {
-		auto &sheet = sprite_sheets[sprite_sheet_index];
-		return sheet.sheet_sprites[sheet.sprites_by_name.at(name)].region;
-	}
-
-    void sprite_remove(const std::string &name) {
-		auto itr = sprites.find(name);
-		if (itr != sprites.end()) {
-			SDL_DestroyTexture(itr->second->image);
-    		delete itr->second;
-    		sprites.erase(itr);
-		}
-	}
-
-	void sprite_sheet_load(const std::string &name, const std::string &file) {
-		SpriteSheet s;
-		std::string path = Engine::get_base_data_folder() + file;
-		std::ifstream sprite_sheet_data(path);
-		
-		sprite_sheet_data >> s.sprite_sheet_name;
-
-		Resources::sprite_load(s.sprite_sheet_name, s.sprite_sheet_name);
-
-		if(sprite_sheet_data) {
-			int sprite_count = 0;
-			sprite_sheet_data >> sprite_count;
-			for(int i = 0; i < sprite_count; i++) {
-				SpriteFrame sf;
-				sprite_sheet_data >> sf.id;
-				sprite_sheet_data >> sf.name;
-				SDL_Rect r;
-				sprite_sheet_data >> r.x;
-				sprite_sheet_data >> r.y;
-				sprite_sheet_data >> r.w;
-				sprite_sheet_data >> r.h;
-				sf.region = r;
-
-				int id = (int)s.sheet_sprites.size();
-				s.sheet_sprites.push_back(sf);
-				s.sprites_by_id[sf.id] = id;
-				s.sprites_by_name[sf.name] = id;
-			}
-		}
-
-		auto index = sprite_sheets.size();
-		sprite_sheet_map[name] = index;
-		sprite_sheets.push_back(s);
-	}
-
-	void sprite_sheet_copy_as_white(const std::string &name, const std::string &copy_from) {
-		auto sprite_sheet_index = sprite_sheet_map[copy_from];
-		SpriteSheet white_sheet = sprite_sheets[sprite_sheet_index];
-		sprite_load_white(name, white_sheet.sprite_sheet_name);
-		white_sheet.sprite_sheet_name = name;
-
-		auto index = sprite_sheets.size();
-		sprite_sheet_map[name] = index;
-		sprite_sheets.push_back(white_sheet);
-	}
-
-	size_t sprite_sheet_index(const std::string &name) {
-		return sprite_sheet_map[name];
-	}
-
-    const SpriteSheet &sprite_sheet_get(const std::string &name) {
-		auto sprite_sheet_index = sprite_sheet_map[name];
-		return sprite_sheets[sprite_sheet_index];
-	}
-
-	std::vector<SpriteSheet> &get_sprite_sheets() {
-		return sprite_sheets;
-	}
-
+	
     Font *font_load(const std::string name, const std::string filename, int pointSize) {
 		std::string path = Engine::get_base_data_folder() + filename;
 		Font *f = new Font;
@@ -328,6 +180,21 @@ void set_default_font(Font *font) {
 	default_font = font;
 }
 
+void draw_sprite_centered_rotated(const Sprite *sprite, const int &x, const int &y, const float &angle) {
+	int w = sprite->w;
+	int h = sprite->h;
+	SDL_Rect destination_rect;
+	destination_rect.x = x - (w / 2);
+ 	destination_rect.y = y - (h / 2);
+  	destination_rect.w = w;
+  	destination_rect.h = h;
+
+	SDL_RenderCopyEx(renderer.renderer, sprite->image, NULL, &destination_rect, angle, NULL, SDL_FLIP_NONE);
+}
+
+
+
+
 void draw_sprite(const Sprite *sprite, int x, int y) {
 	SDL_Rect destination_rect;
 	destination_rect.x = x;
@@ -337,6 +204,8 @@ void draw_sprite(const Sprite *sprite, int x, int y) {
 
 	SDL_RenderCopy(renderer.renderer, sprite->image, NULL, &destination_rect);
 }
+
+
 
 void draw_sprite_centered(const Sprite *sprite, int x, int y) {
 	int w = sprite->w;
@@ -414,13 +283,16 @@ void draw_text_font(Font *font, int x, int y, const SDL_Color &color, const char
 	Sprite &cacheItem = TextCache::load(font, color, text);
 	draw_sprite(&cacheItem, x, y);
 }
+
 void draw_text(int x, int y, const SDL_Color &color, const std::string text) {
 	draw_text_font(default_font, x, y, color, text.c_str());
 }
+
 void draw_text_font_centered(Font *font, int x, int y, const SDL_Color &color, const std::string text) {
 	Sprite &cacheItem = TextCache::load(font, color, text.c_str());
 	draw_sprite_centered(&cacheItem, x, y);
 }
+
 void draw_text_centered(int x, int y, const SDL_Color &color, std::string text) {
 	draw_text_font_centered(default_font, x, y, color, text.c_str());
 }
@@ -492,12 +364,8 @@ int renderer_init(const char *title, unsigned vw, unsigned vh, unsigned scale) {
     return 1;
 }
 
-void renderer_set_color(const SDL_Color &color) {
-	SDL_SetRenderDrawColor(renderer.renderer, color.r, color.g, color.b, color.a);
-}
-
 void renderer_clear() {
-	renderer_set_color(renderer.clearColor);
+	SDL_SetRenderDrawColor(renderer.renderer, renderer.clearColor.r, renderer.clearColor.g, renderer.clearColor.b, renderer.clearColor.a);	
 	SDL_SetRenderTarget(renderer.renderer, renderer.renderTarget);
 	SDL_RenderClear(renderer.renderer);
 }
