@@ -15,8 +15,6 @@ gfx renderer;
 namespace Resources {
 	std::unordered_map<std::string, Sprite*> sprites;
 	std::unordered_map<std::string, Font*> fonts;
-	std::vector<SpriteSheet> sprite_sheets;
-	std::unordered_map<std::string, int> sprite_sheet_map;
 	
 	static SDL_Texture* load_texture(const std::string &path, int &w, int &h) { 
 		//The final texture 
@@ -192,9 +190,6 @@ void draw_sprite_centered_rotated(const Sprite *sprite, const int &x, const int 
 	SDL_RenderCopyEx(renderer.renderer, sprite->image, NULL, &destination_rect, angle, NULL, SDL_FLIP_NONE);
 }
 
-
-
-
 void draw_sprite(const Sprite *sprite, int x, int y) {
 	SDL_Rect destination_rect;
 	destination_rect.x = x;
@@ -204,8 +199,6 @@ void draw_sprite(const Sprite *sprite, int x, int y) {
 
 	SDL_RenderCopy(renderer.renderer, sprite->image, NULL, &destination_rect);
 }
-
-
 
 void draw_sprite_centered(const Sprite *sprite, int x, int y) {
 	int w = sprite->w;
@@ -217,66 +210,6 @@ void draw_sprite_centered(const Sprite *sprite, int x, int y) {
   	destination_rect.h = h;
 
 	SDL_RenderCopy(renderer.renderer, sprite->image, NULL, &destination_rect);
-}
-
-void draw_sprite_region(const Sprite *sprite, const SDL_Rect *src_rect, int x, int y) {
-	SDL_Rect destination_rect;
-	destination_rect.x = x;
- 	destination_rect.y = y;
-  	destination_rect.w = src_rect->w;
-  	destination_rect.h = src_rect->h;
-
-	SDL_RenderCopy(renderer.renderer, sprite->image, src_rect, &destination_rect);
-}
-
-void draw_sprite_region_centered(const Sprite *sprite, const SDL_Rect *src_rect, int x, int y) {
-	int w = src_rect->w;
-	int h = src_rect->h;
-	SDL_Rect destination_rect;
-	destination_rect.x = x - (w / 2);
- 	destination_rect.y = y - (h / 2);
-  	destination_rect.w = w;
-  	destination_rect.h = h;
-
-	SDL_RenderCopy(renderer.renderer, sprite->image, src_rect, &destination_rect);
-}
-
-void draw_sprite_region_centered_rotated(const Sprite *sprite, const SDL_Rect *src_rect, int x, int y, float angle) {
-	int w = src_rect->w;
-	int h = src_rect->h;
-	SDL_Rect destination_rect;
-	destination_rect.x = x - (w / 2);
- 	destination_rect.y = y - (h / 2);
-  	destination_rect.w = w;
-  	destination_rect.h = h;
-
-	SDL_RenderCopyEx(renderer.renderer, sprite->image, src_rect, &destination_rect, angle, NULL, SDL_FLIP_NONE);
-}
-
-void draw_sprite_region_centered_ex(const Sprite *sprite, const SDL_Rect *src_rect, int x, int y, int w, int h, float angle) {
-	SDL_Rect destination_rect;
-	destination_rect.x = x - (w / 2);
- 	destination_rect.y = y - (h / 2);
-  	destination_rect.w = w;
-  	destination_rect.h = h;
-
-	SDL_RenderCopyEx(renderer.renderer, sprite->image, src_rect, &destination_rect, angle, NULL, SDL_FLIP_NONE);
-}
-
-void draw_spritesheet_name(const SpriteSheet &s, const std::string &sprite, const int &x, const int &y) {
-	draw_sprite_region(Resources::sprite_get(s.sprite_sheet_name), &s.sheet_sprites[s.sprites_by_name.at(sprite)].region, x, y);
-}
-
-void draw_spritesheet_name_centered(const SpriteSheet &s, const std::string &sprite, const int &x, const int &y) {
-	draw_sprite_region_centered(Resources::sprite_get(s.sprite_sheet_name), &s.sheet_sprites[s.sprites_by_name.at(sprite)].region, x, y);
-}
-
-void draw_spritesheet_name_centered_rotated(const SpriteSheet &s, const std::string &sprite, const int &x, const int &y, const float &angle) {
-	draw_sprite_region_centered_rotated(Resources::sprite_get(s.sprite_sheet_name), &s.sheet_sprites[s.sprites_by_name.at(sprite)].region, x, y, angle);
-}
-
-void draw_spritesheet_name_centered_ex(const SpriteSheet &s, const std::string &sprite, const int &x, const int &y, const int &w, const int &h, const float &angle) {
-	draw_sprite_region_centered_ex(Resources::sprite_get(s.sprite_sheet_name), &s.sheet_sprites[s.sprites_by_name.at(sprite)].region, x, y, w, h, angle);
 }
 
 void draw_text_font(Font *font, int x, int y, const SDL_Color &color, const char *text) {
