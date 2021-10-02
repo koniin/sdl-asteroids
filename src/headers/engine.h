@@ -67,37 +67,12 @@ namespace Engine {
 	void logn(const char* fmt, ...);
 
 	void set_base_data_folder(const std::string &name);
-	inline std::string get_base_data_folder();
+	std::string get_base_data_folder();
 
 	void pause(float time);
 
 	void update();
-
-	void cleanup();
 }
-
-struct Point;
-namespace FrameLog {
-	const bool &is_enabled();
-	void log(const std::string &message);
-    void enable_at(const int x, const int y);
-	const std::vector<std::string> &get_messages();
-	const Point &get_position();
-}
-
-namespace Text {
-	inline std::string format(const std::string format, ...) {
-        va_list args;
-        va_start (args, format);
-        size_t len = std::vsnprintf(NULL, 0, format.c_str(), args);
-        va_end (args);
-        std::vector<char> vec(len + 1);
-        va_start (args, format);
-        std::vsnprintf(&vec[0], len + 1, format.c_str(), args);
-        va_end (args);
-        return &vec[0];
-    }
-};
 
 struct Vector2;
 struct Point {
@@ -621,58 +596,5 @@ namespace RNG {
 		return Vector2(xgen(RNG_generator), ygen(RNG_generator));
 	}
 }
-
-namespace Localization {
-    struct Text {
-        Text(const char *file);
-        char *getText(const std::string s);
-        std::map<std::string, char *> texts;
-    };
-
-    void load_texts(const char *file);
-    char *text_lookup(const std::string s);
-}
-
-namespace Serialization {	
-	void write_string(std::ostream &out, const std::string &s);
-	void read_string(std::istream &in, std::string &s);
-}
-
-namespace Noise {
-	// All noise functions from
-	// https://github.com/Auburns/FastNoise
-	// Lowest amount to highest amount interpolation
-	enum Interp { Linear, Hermite, Quintic };
-	
-	void init(int seed = 1337);
-	void set_seed(int seed);	
-	float perlin(float x, float y);
-	float simplex(float x, float y);
-}
-
-struct TileMap {
-	unsigned tile_size;
-	unsigned columns;
-	unsigned rows;
-	unsigned layers;
-	unsigned *tiles;
-};
-
-namespace Tiling {
-	unsigned tilemap_index(const TileMap &tile_map, const unsigned layer, const unsigned x, const unsigned y);
-	void tilemap_load(const std::string map_name, TileMap &tile_map);
-	void tilemap_make(TileMap &tile_map, unsigned layers, unsigned columns, unsigned rows, unsigned tile_size, unsigned default_tile = 0);
-};
-
-namespace Sound {
-	typedef size_t SoundId;
-	// Load/Cache a sound from the sound folder
-	SoundId load(const std::string &file);
-	void init();
-	void quit();
-	void play_next();
-	void play_all();
-	void queue(SoundId id, int volume);
-};
 
 #endif

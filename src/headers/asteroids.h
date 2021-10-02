@@ -535,6 +535,8 @@ void asteroids_update() {
 }
 
 void asteroids_render() {
+	renderer_clear();
+
 	if(game_state.inactive) {
 		int seconds = (int)game_state.inactive_timer;
 		draw_text_font_centered(Resources::font_get("gameover"), gw / 2, gh / 2, game_state.text_color, "GAME OVER");
@@ -573,4 +575,7 @@ void asteroids_render() {
 		draw_text_str(gw / 2 - 80, 10 + 10 * i, game_state.text_color, playerInfo);
 		draw_text_str(gw / 2 + 60, 10 + 10 * i, game_state.text_color, std::to_string(player.score));
 	}
+
+	renderer_draw_render_target();
+	renderer_flip();
 }

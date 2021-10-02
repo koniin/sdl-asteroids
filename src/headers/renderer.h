@@ -7,7 +7,8 @@
 
 // prefered display to show the window
 #ifndef PREFERRED_DISPLAY
-    #define PREFERRED_DISPLAY 1
+    #define PREFERRED_DISPLAY 0
+    // #define PREFERRED_DISPLAY 1
 #endif
 
 extern unsigned gw;
@@ -142,7 +143,6 @@ void draw_text_centered_str(int x, int y, const SDL_Color &color, std::string te
 void draw_text_right_str(int x, int y, const SDL_Color &color, std::string text);
 void draw_text_font_centered(Font *font, int x, int y, const SDL_Color &color, const char *text);
 void draw_text_font_right_aligned(Font *font, int x, int y, const SDL_Color &color, const char *text);
-void draw_tilemap_ortho(const TileMap &t, const SpriteSheet &s, const int x_start, const int y_start);
 
 void draw_g_pixel(int x, int y);
 void draw_g_pixel_color(int x, int y, const SDL_Color &color);
@@ -169,7 +169,6 @@ void renderer_set_clear_color(const SDL_Color &color);
 void renderer_set_color(const SDL_Color &color);
 void renderer_clear();
 void renderer_draw_render_target();
-void renderer_draw_render_target_camera();
 void renderer_flip();
 void renderer_destroy();
 

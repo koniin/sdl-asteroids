@@ -11,7 +11,6 @@ int windowPos;
 
 Font *default_font;
 gfx renderer;
-Camera camera;
 
 namespace Resources {
 	std::unordered_map<std::string, Sprite*> sprites;
@@ -445,19 +444,6 @@ void draw_text_font_right_aligned(Font *font, int x, int y, const SDL_Color &col
 	Sprite &cacheItem = TextCache::load(font, color, text);
 	x -= cacheItem.w;
 	draw_sprite(&cacheItem, x, y);
-}
-
-void draw_tilemap_ortho(const TileMap &t, const SpriteSheet &s, const int x_start, const int y_start) {
-	for(unsigned layer = 0; layer < t.layers; layer++) {
-		for(unsigned y = 0; y < t.rows; y++) {
-			for(unsigned x = 0; x < t.columns; x++) {
-				unsigned tile = t.tiles[Tiling::tilemap_index(t, layer, x, y)];
-				draw_sprite_region(Resources::sprite_get(s.sprite_sheet_name), 
-					&s.sheet_sprites[s.sprites_by_id.at(tile)].region,
-					x_start + x * t.tile_size, y_start + y * t.tile_size);
-			}
-		}
-	}
 }
 
 void draw_g_pixel(int x, int y) {

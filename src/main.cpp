@@ -1,6 +1,6 @@
 #include "engine.h"
 #include "renderer.h"
-#include "game.h"
+#include "asteroids.h"
 
 #include <iostream>
 
@@ -57,7 +57,7 @@ int main(int argc, char* argv[]) {
 
 	Engine::init();
 	
-	game_load();
+	asteroids_load();
 	
 	// Initiate timer
     timer.now = SDL_GetPerformanceCounter();
@@ -86,13 +86,12 @@ int main(int argc, char* argv[]) {
 			input();
 			Engine::update();
 			Time::delta_time = Engine::is_paused() ? 0.0f : Time::delta_time_raw;
-			FrameLog::log("dt: " + std::to_string(Time::delta_time));
-			game_update();
+			asteroids_update();
 			
             timer.accumulator -= timer.fixed_dt;
         }
 		
-		game_render();
+		asteroids_render();
 
 		fps_frames++;
 #define FPS_INTERVAL 1.0 //seconds.
@@ -105,9 +104,6 @@ int main(int argc, char* argv[]) {
 		}
 	}
 	
-	game_unload();
-
-	Engine::cleanup();
 	renderer_destroy();
 
     return 0;
