@@ -165,8 +165,6 @@ void draw_g_rectangle_filled(int x, int y, int w, int h, const SDL_Color &color)
 void draw_g_rectangle_filled_RGBA(int x, int y, int w, int h, uint8_t r, uint8_t g, uint8_t b, uint8_t a);
 
 int renderer_init(const char *title, unsigned vw, unsigned vh, unsigned scale);
-void renderer_set_clear_color(const SDL_Color &color);
-void renderer_set_color(const SDL_Color &color);
 void renderer_clear();
 void renderer_draw_render_target();
 void renderer_flip();

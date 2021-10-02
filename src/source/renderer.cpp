@@ -829,10 +829,6 @@ int renderer_init(const char *title, unsigned vw, unsigned vh, unsigned scale) {
     return 1;
 }
 
-void renderer_set_clear_color(const SDL_Color &color) {
-    renderer.clearColor = color;
-}
-
 void renderer_set_color(const SDL_Color &color) {
 	SDL_SetRenderDrawColor(renderer.renderer, color.r, color.g, color.b, color.a);
 }

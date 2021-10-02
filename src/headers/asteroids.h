@@ -549,12 +549,30 @@ void asteroids_render() {
 
 	for(unsigned i = 0; i < asteroid_n; ++i) {
 		Position &p = asteroids[i].position;
-		draw_g_circle_color((int16_t)p.x, (int16_t)p.y, (int16_t)asteroids[i].radius(), game_state.asteroid_color);
+		int radius = (int16_t)asteroids[i].radius();
+		draw_g_rectangle_filled_RGBA(
+			(int16_t)p.x - radius, 
+			(int16_t)p.y - radius,
+			radius * 2,
+			radius * 2,
+			game_state.asteroid_color.r,
+			game_state.asteroid_color.g,
+			game_state.asteroid_color.b,
+			game_state.asteroid_color.a);
 	}
 	for(unsigned i = 0; i < bullets_n; ++i) {
 		Position &p = bullets[i].position;
 		SDL_Color c = { 255, 0, 0, 255 };
-		draw_g_circle_color((int16_t)p.x, (int16_t)p.y, (int16_t)bullets[i].radius, c);
+		int radius = (int16_t)bullets[i].radius;
+		draw_g_rectangle_filled_RGBA(
+			(int16_t)p.x - radius, 
+			(int16_t)p.y - radius,
+			radius * 2,
+			radius * 2,
+			c.r,
+			c.g,
+			c.b,
+			c.a);
 	}
 
 	for(unsigned i = 0; i < ship_n; ++i) {
@@ -563,8 +581,12 @@ void asteroids_render() {
 		draw_spritesheet_name_centered_rotated(Resources::sprite_sheet_get("shooter"), "player", (int)player.position.x, (int)player.position.y, player.angle + 90);
 		
 		if(player.shield.is_active()) {
-			draw_g_circle_RGBA((int16_t)player.position.x, (int16_t)player.position.y, 
-				10, 0, 0, 255, 255);
+			int shieldSize = 20;
+			draw_g_rectangle_RGBA((int16_t)player.position.x - shieldSize/2, 
+				(int16_t)player.position.y - shieldSize/2,
+				shieldSize, shieldSize, 0,0,255,255);
+
+			//draw_g_circle_RGBA((int16_t)player.position.x, (int16_t)player.position.y, 10, 0, 0, 255, 255);
 		}
 		if(player.shield.inactive_timer <= 0) {
 			draw_g_rectangle_filled_RGBA(gw / 2 - 90, 11 + 10 * i, 5, 5, 0, 255, 0, 255);
